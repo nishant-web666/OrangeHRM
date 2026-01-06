@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Test case 1-->
+<suite name="OrangeHRMSuite">
+    <test name="OrangeHRMTest">
+        <classes>
+<!--            <class name="com.orangehrm.test.DemoTest"></class>-->
+<!--            <class name="com.orangehrm.test.DemoTest2"></class>-->
+            <class name="com.orangehrm.test.LoginPageTest"></class>
+        </classes>
+    </test>
+<!--Test Case 2-->
+<!--    <test name="OrangeHRMTest">-->
+<!--        <classes>-->
+<!--            <class name="com.orangehrm.test.DemoTest"></class>-->
+<!--            <class name="com.orangehrm.test.DemoTest2"></class>-->
+<!--        </classes>-->
+<!--    </test>-->
+</suite>

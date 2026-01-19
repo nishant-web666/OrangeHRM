@@ -1,5 +1,6 @@
 package com.orangehrm.actionclass;
 
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -14,19 +15,20 @@ import com.orangehrm.base.BaseClass;
 public class ActionClass {
     private WebDriver driver;
     private WebDriverWait wait;
+    public static final Logger logger = BaseClass.logger;
     int explicitWait = Integer.parseInt(BaseClass.getProps().getProperty("explicitWait"));
 
     public ActionClass(WebDriver driver){
         this.driver = driver;
         this.wait = new WebDriverWait(this.driver, Duration.ofSeconds(explicitWait));
-        System.out.println("WebDriver instance is created");
+        logger.info("WebDriver instance is created");
     }
     // Method for waiting the element till it is clickable
     public void waitForElementToBeClickable(By by){
         try{
             wait.until(ExpectedConditions.elementToBeClickable(by));
         } catch (Exception e) {
-            System.out.println("Element is not clickable. " + e.getMessage());
+            logger.error("Element is not clickable. " + e.getMessage());
         }
     }
     // Method for waiting the element till it is visible
@@ -34,7 +36,7 @@ public class ActionClass {
         try{
             wait.until(ExpectedConditions.visibilityOfElementLocated(by));
         } catch (Exception e) {
-            System.out.println("Element is not visible. " + e.getMessage());
+            logger.error("Element is not visible. " + e.getMessage());
         }
     }
     // Click Method
@@ -42,8 +44,9 @@ public class ActionClass {
         try {
             waitForElementToBeClickable(by);
             driver.findElement(by).click();
+            logger.info("Element successfully got clicked.");
         } catch (Exception e) {
-            System.out.println("Unable to click. " + e.getMessage());
+            logger.error("Unable to click. " + e.getMessage());
         }
     }
     // EnterText Method
@@ -53,8 +56,9 @@ public class ActionClass {
             WebElement element = driver.findElement(by);
             element.clear();
             element.sendKeys(value);
+            logger.info("");
         } catch (Exception e) {
-            System.out.println("Unable to enter the values in input-box. " + e.getMessage());
+            logger.error("Unable to enter the values in input-box. " + e.getMessage());
         }
     }
     // Method to get text from an input-box
@@ -63,7 +67,7 @@ public class ActionClass {
             waitForElementToBeVisible(by);
             return driver.findElement(by).getText();
         } catch (Exception e) {
-            System.out.println("Unable to get the text from the input-box. " + e.getMessage());
+            logger.error("Unable to get the text from the input-box. " + e.getMessage());
             return "";
         }
     }
@@ -73,10 +77,10 @@ public class ActionClass {
             waitForElementToBeVisible(by);
             String actualText = driver.findElement(by).getText();
             if (actualText.equals(expectedText)){
-                System.out.println("The actual and expected texts are matched " + actualText + "=" + expectedText);
+                logger.info("The actual and expected texts are matched " + actualText + "=" + expectedText);
                 return true;
             }else{
-                System.out.println("The given actual and expected texts are not matching " + actualText + "!=" + expectedText);
+                logger.error("The given actual and expected texts are not matching " + actualText + "!=" + expectedText);
                 return false;
             }
         } catch (Exception e) {

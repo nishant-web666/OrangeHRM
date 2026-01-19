@@ -1,6 +1,7 @@
 package com.orangehrm.base;
 
 import com.orangehrm.actionclass.ActionClass;
+import com.orangehrm.utilities.LogsManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
@@ -16,15 +17,17 @@ import java.time.Duration;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.LockSupport;
+import org.apache.logging.log4j.Logger;
 
 public class BaseClass {
     protected static Properties props;
     protected static WebDriver driver;
     private static ActionClass actionClass;
+    public static final Logger logger = LogsManager.getLogger(BaseClass.class);
     //Driver getter method to call it outside from the package
     public static WebDriver getDriver(){
         if (driver == null){
-            System.out.println("WebDriver is not initialized.");
+            logger.error("WebDriver is not initialized.");
             throw new IllegalStateException("WebDriver is not initialized.");
         }
         return driver;
@@ -36,7 +39,7 @@ public class BaseClass {
     //ActionClass getter method to call it outside from the package
     public static ActionClass getActionClass(){
         if (actionClass == null){
-            System.out.println("WebDriver is not initialized.");
+            logger.error("WebDriver is not initialized.");
             throw new IllegalStateException("WebDriver is not initialized.");
         }
         return actionClass;
@@ -47,6 +50,7 @@ public class BaseClass {
         props = new Properties();
         FileInputStream fis = new FileInputStream("src/main/resources/config.properties");
         props.load(fis);
+        logger.info("Properties files are initialized");
     }
     //Props getter method to call it outside from the package
     public static Properties getProps() {
@@ -59,12 +63,16 @@ public class BaseClass {
         // Setting browser according to the config file
         if (browser.equalsIgnoreCase("chrome")){
             driver = new ChromeDriver();
+            logger.info("ChromeDriver instance is created.");
         } else if (browser.equalsIgnoreCase("firefox")) {
             driver = new FirefoxDriver();
+            logger.info("Firefox instance is created.");
         } else if (browser.equalsIgnoreCase("edge")) {
             driver = new EdgeDriver();
+            logger.info("Edge instance is created.");
         } else if (browser.equalsIgnoreCase("safari")) {
             driver = new SafariDriver();
+            logger.info("Safari instance is created.");
         }else{
             throw new IllegalArgumentException("Driver not supported" + driver);
         }
@@ -90,10 +98,16 @@ public class BaseClass {
         launchBrowser();
         configureBrowser();
         staticWait(2);
+        logger.info("Webdriver Initialized! and Browser Maximized.");
         // Initialize the action driver class only once
         if (actionClass == null){
             actionClass = new ActionClass(driver);
-            System.out.println("ActionClass driver instance is created");
+            logger.info("ActionClass driver instance is created");
+            logger.warn("Logger warn message.");
+            logger.debug("Logger debug message.");
+            logger.fatal("Logger fatal message.");
+            logger.error("Logger error message.");
+            logger.trace("Logger trace message.");
         }
     }
 
@@ -106,7 +120,7 @@ public class BaseClass {
                 System.out.println("Failed to quit the driver "+ e.getMessage());
             }
         }
-        System.out.println("WebDriver instance is closed");
+        logger.info("WebDriver instance is closed");
         driver = null;
         actionClass = null;
     }
